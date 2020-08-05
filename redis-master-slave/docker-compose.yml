@@ -1,0 +1,28 @@
+version: '3' # 版本
+services: # 服务
+  master:
+    image: redis # 指定容器运行的镜像
+    container_name: redis-master # 容器的名称
+    command: redis-server --requirepass 123456 --port 13791
+    ports:  
+      - "13791:13791" # 绑定容器的13791端口到主机的13791端口
+    networks:
+      - mynetwork
+  salve1:
+    image: redis
+    container_name: redis-slave1
+    command: redis-server --slaveof redis-master 13791 --requirepass 123456 --masterauth 123456  
+    ports:
+      - "13792:13792"
+    networks:
+      - mynetwork
+  salve2:
+    image: redis
+    container_name: redis-slave2
+    command: redis-server --slaveof redis-master 13791 --requirepass 123456 --masterauth 123456  
+    ports:
+      - "13793:13793"
+    networks:
+      - mynetwork
+networks:
+  mynetwork:
